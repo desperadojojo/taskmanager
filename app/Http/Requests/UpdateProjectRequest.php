@@ -2,12 +2,15 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Symfony\Component\Routing\Route;
 
-class CreateProjectRequest extends FormRequest
+class UpdateProjectRequest extends FormRequest
 {
-    protected $errorBag = 'create';
+//    protected $errorBag = 'update';
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -22,14 +25,15 @@ class CreateProjectRequest extends FormRequest
      * Get the validation rules that apply to the request.
      *
      * @return array
+     * $this->route('project')获取当前project id
      */
     public function rules()
     {
         return [
             'name'=>[
               'required',
-                Rule::unique('projects')->where(function($query){
-                    return $query->where('user_id', request()->user()->id);
+                Rule::unique('projects')->ignore($this->route('project'))->where(function($query){
+                    return $query->where('user_id', $this->user()->id);
                 })
             ],
             'thumbnail'=>'image|dimensions:min_width=260,min_height=100|max:2048'
@@ -46,4 +50,10 @@ class CreateProjectRequest extends FormRequest
             'thumbnail.max'=>'图片文件最大不能超过2M',
         ];
     }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $this->errorBag = 'update-'.$this->route('project');
+        parent::failedValidation($validator);
+}
 }

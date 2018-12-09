@@ -6,9 +6,15 @@
         <div class="card-deck">
             @each('projects._card',$projects,'project')
 
+                <div class="card col-4 my-3">
+                    <div class="card-body d-flex align-items-center justify-content-center">
+                        @include('projects._createModal')
+                    </div>
+                </div>
+
         </div>
 
-        @include('projects._createModal')
+
     </div>
 @endsection
 

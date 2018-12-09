@@ -20,23 +20,33 @@
                         <div class="form-group">
                             {!! Form::label('name','项目名称:') !!}
                             {!! Form::text('name','',['class'=>'form-control']) !!}
+                            {!! $errors->create->first('name',
+                            '<div class="alert alert-danger">:message</div>') !!}
                         </div>
 
                         <div class="form-group">
                             {!! Form::label('thumbnail','项目缩略图:') !!}
                             {!! Form::file('thumbnail',
                             ['class'=>'form-control-file']) !!}
+                            {!! $errors->create->first('thumbnail',
+                            '<div class="alert alert-danger">:message</div>') !!}
                         </div>
 
-                        @include('errors._errors')
+                        {{--@include('errors._errors')--}}
+                        {{--@if($errors->create->any())--}}
+                            {{--<ul class="alter alert-danger">--}}
+                                {{--@foreach($errors->create->all() as $error)--}}
+                                    {{--<li>{{ $error }}</li>--}}
+                                {{--@endforeach--}}
+                            {{--</ul>--}}
+                        {{--@endif--}}
 
                 </div>
-            <div class="modal-footer">
+                <div class="modal-footer">
 
+                    {!! Form::submit('新建项目', ['class'=>'btn btn-primary']) !!}
 
-                {!! Form::submit('新建项目', ['class'=>'btn btn-primary']) !!}
-
-            </div>
+                </div>
             {!! Form::close() !!}
         </div>
     </div>

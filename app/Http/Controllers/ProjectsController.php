@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Requests\CreateProjectRequest;
+use App\Http\Requests\UpdateProjectRequest;
 use App\Project;
 use App\Repositories\ProjectsRepository;
 use Illuminate\Http\Request;
@@ -15,6 +16,13 @@ class ProjectsController extends Controller
 
     public function __construct(ProjectsRepository $repo){
         $this->repo = $repo;
+        $this->middleware('auth');
+    }
+
+    // create  增
+    public function create()
+    {
+        //  show create form view
     }
 
     public function store(CreateProjectRequest $request)
@@ -24,10 +32,38 @@ class ProjectsController extends Controller
 
     }
 
-    public function destroy(Project $project){
+    // delete 删
+    public function destroy(Project $project)
+    {
         //Project::query()->findOrFail($id)->delete;
         $project->delete();
         return back();
+    }
+
+    //update 改
+    public function edit()
+    {
+        //  show edit form view
+    }
+
+    public function update(UpdateProjectRequest $request, $id){
+        $this->repo->update($request, $id);
+        return back();
+    }
+
+    // show 查
+    public function show($id)
+    {
+        $project = $this->repo->find($id);
+        return view('projects.show');
+    }
+
+    public function index()
+    {
+        $projects = $this->repo->listall();
+//        $projects = request()->user()->projects()->get();
+
+        return view('welcome',compact('projects'));
     }
 
 

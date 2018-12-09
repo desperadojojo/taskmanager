@@ -8,6 +8,7 @@
 
 namespace App\Repositories;
 
+use App\Project;
 use Image;
 
 
@@ -28,6 +29,31 @@ class ProjectsRepository{
             'thumbnail'=>$this->thumb($request),]);
     }
 
+
+    public function find($id)
+    {
+        return Project::query()->findOrFail($id);
+    }
+
+    public function delete($id)
+    {
+        $project = $this->find($id);
+        $project->delete();
+    }
+
+    public function update($request,$id)
+    {
+        $project = $this->find($id);
+        $project->name = $request->name;
+        if($request->hasFile('thumbnail')){
+            $project->thumbnail = $this->thumb($request);
+        }
+        $project->save();
+
+    }
+
+
+
     public function thumb($request){
         //return $request->hasFile('thumbnail') ? $request->thumbnail->store('public/thumbs')
         //    : null;
@@ -42,5 +68,10 @@ class ProjectsRepository{
 
             return $name;
         }
+    }
+
+    public function listall()
+    {
+        return request()->user()->projects()->get();
     }
 }
