@@ -52,10 +52,12 @@ class ProjectsController extends Controller
     }
 
     // show 查
-    public function show($id)
+    public function show(Project $project)
     {
-        $project = $this->repo->find($id);
-        return view('projects.show');
+//        $project = $this->repo->find($id);
+        $todos = $this->repo->todos($project);
+        $dones = $this->repo->dones($project);
+        return view('projects.show',compact('project','todos','dones'));
     }
 
     public function index()

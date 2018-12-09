@@ -15,4 +15,9 @@ class Project extends Model
         // $project->user
         return $this->belongsTo(User::class);
     }
+
+    public function tasks()
+    {
+        return $this->hasMany('App\Task');
+    }
 }

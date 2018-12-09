@@ -33,7 +33,19 @@ class ProjectsRepository{
     public function find($id)
     {
         return Project::query()->findOrFail($id);
+
     }
+
+    public function todos($project)
+    {
+        return $project->tasks()->where('completion',0)->get();
+    }
+
+    public function dones($project)
+    {
+        return $project->tasks()->where('completion',1)->get();
+    }
+
 
     public function delete($id)
     {

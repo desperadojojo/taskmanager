@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-//Route::get('/', 'HomeController@root');
+Route::get('/', 'ProjectsController@index');
 
 
 Auth::routes();
@@ -33,4 +33,4 @@ Auth::routes();
 
 Route::resource('projects','ProjectsController');
 Route::resource('tasks','TasksController');
-
+Route::post('tasks/{id}/check','TasksController@check')->name('tasks.check');

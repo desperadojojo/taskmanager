@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Task;
 use Illuminate\Http\Request;
 
 class TasksController extends Controller
@@ -34,7 +35,13 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        //
+//       dd($request->project);
+        Task::create([
+            'name'=>$request->name,
+            'completion'=>(int) false,
+            'project_id'=>$request->project
+        ]);
+        return back();
     }
 
     /**
@@ -46,6 +53,14 @@ class TasksController extends Controller
     public function show($id)
     {
         //
+    }
+
+    public function check($id)
+    {
+        $task = Task::query()->findOrFail($id);
+        $task->completion = (int) true;
+        $task->save();
+        return back();
     }
 
     /**
