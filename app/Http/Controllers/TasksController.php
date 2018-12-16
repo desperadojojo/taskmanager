@@ -4,9 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Task;
 use Illuminate\Http\Request;
+use App\Repositories\TasksRepository;
+use App\Http\Requests\CreateTask;
+use App\Http\Requests\UpdateTask;
 
 class TasksController extends Controller
 {
+    protected $repo; //对$this->repo保护
+
+    public function __construct(TasksRepository $repo){
+        $this->repo = $repo;
+        $this->middleware('auth');
+    }
+    
+    
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +25,10 @@ class TasksController extends Controller
      */
     public function index()
     {
-        //
+        $todos = $this->repo->todos();
+        $dones = $this->repo->dones();
+        $projects = request()->user()->projects()->pluck('name','id'); // pluck方法第一个参数为值，第二个参数为键
+        return view('tasks.index',compact('todos','dones','projects'));
     }
 
     /**
@@ -33,14 +47,11 @@ class TasksController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateTask $request)
     {
+        $this->repo->create($request);
 //       dd($request->project);
-        Task::create([
-            'name'=>$request->name,
-            'completion'=>(int) false,
-            'project_id'=>$request->project
-        ]);
+        
         return back();
     }
 
@@ -57,9 +68,8 @@ class TasksController extends Controller
 
     public function check($id)
     {
-        $task = Task::query()->findOrFail($id);
-        $task->completion = (int) true;
-        $task->save();
+        $this->repo->check($id);
+        
         return back();
     }
 
@@ -81,9 +91,10 @@ class TasksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateTask $request, $id)
     {
-        //
+        $this->repo->update($request,$id);
+        return back();
     }
 
     /**
@@ -94,6 +105,7 @@ class TasksController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->repo->destroy($id);
+        return back();
     }
 }

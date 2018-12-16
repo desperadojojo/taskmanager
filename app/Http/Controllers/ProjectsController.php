@@ -57,7 +57,9 @@ class ProjectsController extends Controller
 //        $project = $this->repo->find($id);
         $todos = $this->repo->todos($project);
         $dones = $this->repo->dones($project);
-        return view('projects.show',compact('project','todos','dones'));
+        $projects = request()->user()->projects()->pluck('name','id'); // pluck方法第一个参数为值，第二个参数为键
+        //dd($projects);
+        return view('projects.show',compact('project','todos','dones','projects'));
     }
 
     public function index()

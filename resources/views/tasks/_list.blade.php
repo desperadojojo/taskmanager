@@ -9,16 +9,23 @@
 </ul>
 <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="todo" role="tabpanel" aria-labelledby="todo-tab">
-        @if(count($todos))
+        
             <table class="table table-striped">
-                @foreach($todos as $task)
-                    <tr>
-                        <td>{{ $task->name }}</td>
-                        <td>@include('tasks._checkForm')</td>
-                    </tr>
-                @endforeach
+                <tr>
+                    <td colspan="4">@include('tasks._createForm')</td>
+                </tr>
+                @if(count($todos))
+                    @foreach($todos as $task)
+                        <tr>
+                            <td class="col-9 pl-5">{{ $task->name }}</td>
+                            <td>@include('tasks._checkForm')</td>
+                            <td>@include('tasks._editModal')</td>
+                            <td>@include('tasks._deleteForm')</td>
+                        </tr>
+                    @endforeach
+                @endif
             </table>
-        @endif
+        
     </div>
 
     <div class="tab-pane fade" id="done" role="tabpanel" aria-labelledby="done-tab">
