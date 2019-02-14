@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateProjectRequest;
 use App\Project;
 use App\Repositories\ProjectsRepository;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 
 class ProjectsController extends Controller
@@ -54,11 +55,17 @@ class ProjectsController extends Controller
     // show 查
     public function show(Project $project)
     {
+        // return Carbon::createFromDate(1976,1,29)->age;
+        // return Carbon::now()->subMinutes(8)->diffForHumans();
+
 //        $project = $this->repo->find($id);
         $todos = $this->repo->todos($project);
         $dones = $this->repo->dones($project);
         $projects = request()->user()->projects()->pluck('name','id'); // pluck方法第一个参数为值，第二个参数为键
         //dd($projects);
+        // $todoCount = $project->tasks()->where('completion',0)->count();
+        // dd($todoCount);
+        
         return view('projects.show',compact('project','todos','dones','projects'));
     }
 

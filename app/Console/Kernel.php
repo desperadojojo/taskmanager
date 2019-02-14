@@ -24,8 +24,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command('back:clean --disable-notifications')
+                 ->weeklyOn(4,'01:00');
+        $schedule->command('back:run --disable-notifications')
+                 ->weeklyOn(4,'02:00');
     }
 
     /**

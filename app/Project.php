@@ -20,4 +20,10 @@ class Project extends Model
     {
         return $this->hasMany('App\Task');
     }
+
+    public function getThumbnailAttribute($value){
+        return $value ?? 'guoan.jpg';
+    }
+    // 属性获取器
+
 }
