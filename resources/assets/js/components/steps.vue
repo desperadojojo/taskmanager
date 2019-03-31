@@ -1,30 +1,25 @@
 <template>
     <div class="row">
         <div class="col-4 mr-4" >
-            <step-list :steps="inProcess" :route="route"></step-list>
+            <step-list :steps="inProcess" :route="route">
+                <div class="card-header">
+                    待完成的步骤({{ inProcess.length }})：
+                    <button class="btn btn-sm btn-success pull-right" @click="completeAll">
+                    完成所有</button>
+                 </div>             
+            </step-list>
             <step-input :route="route" @add="sync"></step-input>
             <!-- 传参是需要解析的动态内容，为了区别静态参数，需要加 : 相当于v-bind缩写  -->
         </div>
         <div class="col-4">
-            <div class="card" v-show="processed.length">
+            <step-list :steps="processed" :route="route">
                 <div class="card-header">
                     已完成的步骤({{ processed.length }})：
                     <button class="btn btn-sm btn-danger pull-right" @click="clearCompleted">
                         清除已完成
                     </button>
-                </div>             
-                <div class="card-bod">
-                    <ul class="list-group">
-                        <li class="list-group-item" v-for="step in processed">
-                            <span @dblclick="edit(step)">{{ step.name }}</span>
-                            <span class="pull-right">
-                                <i class="fa fa-check" @click="toggle(step)"></i>
-                                <i class="fa fa-close" @click="remove(step)"></i>
-                            </span>                                
-                        </li>
-                    </ul>
-                </div>
-            </div>
+                </div>              
+            </step-list>         
         </div>
     </div>
 </template>
@@ -51,7 +46,8 @@
         },
 
         created(){
-                this.fetchSteps()            
+                this.fetchSteps() 
+                Hub.$on('remove',this.remove)           
         },
 
         computed:{
@@ -84,32 +80,17 @@
 
             sync(step){
                 this.steps.push(step)
-            },
-            
-            
-        
-
+            },        
+ 
             remove(step){
-                axios.delete(`${this.route}/${step.id}`).then((res)=>{
-                    let i = this.steps.indexOf(step)
-                    this.steps.splice(i,1)
-                })
-                
+                let i = this.steps.indexOf(step)
+                this.steps.splice(i,1)
             },
-
             //如果不发生index串用问题，可以用更简便的函数,v-for中提取index
             // remove(index){
             //     this.steps.splice(index,1)
             // }    
             //注意不能用delete做函数名
-
-            edit(step){
-                //删除当前step
-                this.remove(step)
-                //在输入框中显示当前step的name
-                Hub.$emit('edit',step)
-                
-            },
 
             completeAll(){
                 axios.post(`${this.route}/complete`).then((res)=>{
